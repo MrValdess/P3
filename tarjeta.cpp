@@ -1,3 +1,5 @@
+//Pablo  Garcia Bravo
+
 //Añadimos cabeceras
 #include "tarjeta.hpp"
 #include <locale>
@@ -7,26 +9,30 @@ using std::isspace;
 using std::isdigit;
 
 
-////////////////CLASE NUMERO/////////////////
 // Declaracion antocipadas//
 //Algoritmo de Luhn
 bool luhn(const Cadena& numero);
 //Todas las tarjetas
 std::set<Numero> Tarjeta::tarjetas_;
 
+////////////////CLASE NUMERO/////////////////
+struct EsDigito{
+    bool operator()(char c)const{return isdigit(c);}
+    typedef char tipo_argumento;
+};
+struct EsBlanco{
+    bool operator()(char c)const{return isspace(c);}
+    typedef char tipo_argumento;
+};
 //Constructor por defecto
 Numero::Numero(const Cadena& num){
     //Le quitamos los espacios
     Cadena aux;
-    for(auto x: num){
-        if(!isspace(x)){
-            if(!isdigit(x)) throw Numero::Incorrecto(DIGITOS);
-            else aux += Cadena(1,x); //Si es digito llamamos a una cadena de tamaño 1 y de caracter x y se la sumamos a aux
-        }
-        
-    }
+    auto it1 = std::remove_if(aux.begin(), aux.end(), EsBlanco());
+    //Comprobamos que todo sea digito
+    auto it2 = std::find_if(aux.begin(), aux.end(), std::not1(EsDigito()));
     //Verificamos que sea correcta
-    if(aux.length()<13 || aux.length()>19){ //Si la cadena esta fuera de la longitud valida lanzamos un error
+    if(aux.length() < 13 || aux.length() > 19){ //Si la cadena esta fuera de la longitud valida lanzamos un error
         throw Numero::Incorrecto(LONGITUD);
     }
     else if(!luhn(aux)){    //Si la cadena no cumple el algoritmo de luhn, da error

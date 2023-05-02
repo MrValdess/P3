@@ -1,3 +1,5 @@
+//Pablo Garcia Bravo
+
 #ifndef _TARJETA_HPP
 #define _TARJETA_HPP
 
