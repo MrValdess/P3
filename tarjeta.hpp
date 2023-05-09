@@ -94,6 +94,9 @@ class Tarjeta{
                 Numero duplicado_;
         };
 
+        //Clase Desactivada
+        class Desactivada{};
+
         //Destructor
         ~Tarjeta();
     private:

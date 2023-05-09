@@ -2,8 +2,9 @@
 
 //Añadimos cabeceras
 #include "tarjeta.hpp"
-#include <locale>
 #include "usuario.hpp"
+#include <locale>
+#include <functional>
 
 using std::isspace;
 using std::isdigit;
@@ -18,28 +19,35 @@ std::set<Numero> Tarjeta::tarjetas_;
 ////////////////CLASE NUMERO/////////////////
 struct EsDigito{
     bool operator()(char c)const{return isdigit(c);}
-    typedef char tipo_argumento;
+    char c_;
 };
+
 struct EsBlanco{
     bool operator()(char c)const{return isspace(c);}
-    typedef char tipo_argumento;
+    char c_;
 };
+
 //Constructor por defecto
 Numero::Numero(const Cadena& num){
     //Le quitamos los espacios
     Cadena aux;
-    auto it1 = std::remove_if(aux.begin(), aux.end(), EsBlanco());
+    auto it = std::remove_if(aux.begin(), aux.end(), EsBlanco());
     //Comprobamos que todo sea digito
-    auto it2 = std::find_if(aux.begin(), aux.end(), std::not1(EsDigito()));
-    //Verificamos que sea correcta
-    if(aux.length() < 13 || aux.length() > 19){ //Si la cadena esta fuera de la longitud valida lanzamos un error
-        throw Numero::Incorrecto(LONGITUD);
+    auto it2 = std::find_if(aux.begin(), aux.end(), std::not_fn(EsDigito()));
+    if(it2 == aux.end()){
+        //Verificamos que sea correcta
+        if(aux.length() < 13 || aux.length() > 19){ //Si la cadena esta fuera de la longitud valida lanzamos un error
+            throw Numero::Incorrecto(LONGITUD);
+        }
+        else if(!luhn(aux)){    //Si la cadena no cumple el algoritmo de luhn, da error
+            throw Numero::Incorrecto(NO_VALIDO);
+        }
+        //Si cumple ambos criterios, copiamos la cadena sin espacios ni caracteres invalidos
+        numero_= aux;
     }
-    else if(!luhn(aux)){    //Si la cadena no cumple el algoritmo de luhn, da error
-        throw Numero::Incorrecto(NO_VALIDO);
+    else{
+        throw Numero::Incorrecto(DIGITOS);
     }
-    //Si cumple ambos criterios, copiamos la cadena sin espacios ni caracteres invalidos
-    numero_= aux;  
 }
 
 ////////////////CLASE TARJETA/////////////////

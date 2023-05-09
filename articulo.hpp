@@ -24,6 +24,9 @@ public:
     size_t stock() const noexcept {return stock_;}
     size_t& stock (){return stock_;}
 
+    //Clase amiga de Pedido
+    friend class Pedido;
+
     //Destructor por defecto
     ~Articulo() = default;
 
