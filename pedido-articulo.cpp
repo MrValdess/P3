@@ -6,20 +6,20 @@
 //Operador de insercion en flujo
 std::ostream& operator <<(std::ostream& os, const LineaPedido& lp){
     std::locale::global(std::locale(""));
-    os << std::fixed << std::setprecision(2) << lp.precio_venta() << " €    " << lp.cantidad();
+    os << std::fixed << std::setprecision(2) << lp.precio_venta() << " €\t" << lp.cantidad();
     return os;
 }
 
 
 ///////////////CLASE PEDIDO_ARTICULO/////////////////
 //Metodos pedir
-void Pedido_Articulo::pedir(Pedido& ped, Articulo& art, double precio, unsigned int cantidad){
+void Pedido_Articulo::pedir(Pedido& ped, Articulo& art, double precio, unsigned cantidad){
     //Con el make_pair() podemos hacer una tupla para almacenar los datos en el mapa
     pa[&ped].insert(std::make_pair(&art, LineaPedido(precio, cantidad)));  
     ap[&art].insert(std::make_pair(&ped, LineaPedido(precio, cantidad)));
 }
 
-void Pedido_Articulo::pedir(Articulo& art, Pedido& ped, double precio, unsigned int cantidad){
+void Pedido_Articulo::pedir(Articulo& art, Pedido& ped, double precio, unsigned cantidad){
     pedir(ped, art, precio, cantidad);
 }
 
@@ -76,15 +76,15 @@ std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::ItemsPedido& 
     double total = 0; 
     //Insercion en flujo
     os << "PVP\tCantidad\tArticulo" << std::endl;
-    os << std::setfill('=') << std::setw(100) << " " << std::endl;
+    os << std::setfill('=') << std::setw(75) << " " << std::endl;
     //Imprimimos el resto del contenido con un bucle
     for(auto& i:Iped){
         total += (i.second.precio_venta() * i.second.cantidad());
         os << i.second << "\t\t";
-        os << "[" << i.first->referencia() << "]" << i.first->titulo() << std::endl;
+        os << "[" << i.first->referencia() << "] " << i.first->titulo() << std::endl;
     }
-    os << std::setfill('=') << std::setw(80) << " " << std::endl;
-    os << "Total\t" << total << " €" << std::endl << std::endl;
+    os << std::setfill('=') << std::setw(75) << " " << std::endl;
+    os << "Total\t" << total << " €" << std::endl;
     return os;
 }
 
@@ -92,20 +92,23 @@ std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::ItemsPedido& 
 std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::Pedidos& ped){
     //Declaracion variables auxiliares
     double total = 0;
-    unsigned int cantidad = 0;
+    unsigned cantidad = 0;
     //Insercion en flujo
     os << "[Pedidos: " << ped.size() << "]" << std::endl;
-    os << std::setfill('=') << std::setw(100) << " " << std::endl;
+    os << std::setfill('=') << std::setw(75) << " " << std::endl;
     os << "PVP\tCantidad\tArticulo" << std::endl;
-    os << std::setfill('=') << std::setw(100) << " " << std::endl;
+    os << std::setfill('=') << std::setw(75) << " " << std::endl;
     //Imprimimos el contenido con el bucle
     for(auto& i:ped){
         total += (i.second.precio_venta() * i.second.cantidad());
         cantidad += i.second.cantidad();
         os << i.second << "\t\t" << i.first->fecha() << std::endl;
     }
-    os << std::setfill('=') << std::setw(100) << " " <<std::endl;
-    os << total << " €\t" << cantidad << std::endl << std::endl;
+    os << std::setfill('=') << std::setw(75) << " " <<std::endl;
+    os << total << " €\t" << cantidad << std::endl;
     return os;
 }
 
+//Funciones de OrdenaArticulos y OrdenaPedidos
+bool OrdenaArticulos::operator()(const Articulo* a1, const Articulo* a2)const noexcept{return a1->referencia() < a2->referencia();}
+bool OrdenaPedidos::operator()(const Pedido* p1, const Pedido* p2)const noexcept{return p1->numero() < p2->numero();}

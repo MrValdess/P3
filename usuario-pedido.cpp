@@ -14,7 +14,7 @@ void Usuario_Pedido::asocia(Pedido& ped, Usuario& user){
 }
 
 //Resto de metodos
-Usuario_Pedido::Pedidos Usuario_Pedido::pedidos(Usuario& user) const noexcept{
+Usuario_Pedido::Pedidos Usuario_Pedido::pedidos(const Usuario& user) const noexcept{
     auto i = up.find((Usuario*)&user);
     if(i != up.end()){  //Si lo encuentra devuelve el elemento asociado en el mapa
         return i->second;
@@ -24,7 +24,7 @@ Usuario_Pedido::Pedidos Usuario_Pedido::pedidos(Usuario& user) const noexcept{
     }
 } 
 
-Usuario* Usuario_Pedido::cliente(Pedido& ped) const noexcept{
+const Usuario* Usuario_Pedido::cliente(const Pedido& ped) const noexcept{
     auto i = pu.find((Pedido*)&ped);
     if(i != pu.end()){  //Si lo encuentra devuelve el elemento asociado en el mapa
         return i->second;

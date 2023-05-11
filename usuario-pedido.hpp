@@ -13,7 +13,6 @@
 //Declaraciones adelantadas
 class Pedido;
 class Usuario;
-class Clave;
 
 ///////////////CLASE USUARIO_PEDIDO/////////////////
 class Usuario_Pedido{
@@ -25,8 +24,8 @@ class Usuario_Pedido{
         void asocia(Usuario& user, Pedido& ped);
         void asocia(Pedido& ped, Usuario& user);
         //Resto de metodos
-        Pedidos pedidos(Usuario& user) const noexcept;
-        Usuario* cliente(Pedido& ped) const noexcept;
+        Pedidos pedidos(const Usuario& user) const noexcept;
+        const Usuario* cliente(const Pedido& ped) const noexcept;
 
     private:
         //Mapas 

@@ -40,13 +40,13 @@ inline unsigned int LineaPedido::cantidad() const noexcept {return cantidadVendi
 
 ///////////////CLASE PEDIDO_ARTICULO/////////////////
 //Declaraciones adelantadas
-class OrdenaArticulos: std::binary_function<Articulo*, Articulo*, bool>{
+class OrdenaArticulos: public std::binary_function<Articulo*, Articulo*, bool>{
     public: 
-        bool operator ()(const Articulo& art1, const Articulo& art2);
+        bool operator ()(const Articulo* art1, const Articulo* art2) const noexcept;
 };
-class OrdenaPedidos: std::binary_function<Articulo*, Articulo*, bool>{
+class OrdenaPedidos: public std::binary_function<Articulo*, Articulo*, bool>{
     public: 
-        bool operator ()(const Pedido& ped1, const Pedido& ped2);
+        bool operator ()(const Pedido* ped1, const Pedido* ped2) const noexcept;
 };
 
 class Pedido_Articulo{
@@ -56,8 +56,8 @@ class Pedido_Articulo{
         typedef std::map<Pedido*, LineaPedido, OrdenaPedidos> Pedidos;
         
         //Metodos pedir sobrecargados
-        void pedir(Pedido& ped, Articulo& art, double precio, unsigned int cantidad = 1);
-        void pedir(Articulo& art, Pedido& ped, double precio, unsigned int cantidad = 1);
+        void pedir(Pedido& ped, Articulo& art, double precio, unsigned cantidad = 1);
+        void pedir(Articulo& art, Pedido& ped, double precio, unsigned cantidad = 1);
 
         //Resto de metodos
         ItemsPedido detalle(const Pedido& ped) const;

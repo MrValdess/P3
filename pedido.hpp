@@ -4,7 +4,6 @@
 #define _PEDIDO_HPP
 
 #include <iostream>
-#include <map>
 #include "tarjeta.hpp"
 #include "articulo.hpp"
 #include "pedido-articulo.hpp"
@@ -23,11 +22,11 @@ class Pedido_Articulo;
 class Pedido{
     public:
         //Constructores
-        explicit Pedido(Usuario_Pedido& userped, Pedido_Articulo& pedart, Usuario& user, Tarjeta& tar, const Fecha& fech = Fecha {});
+        Pedido(Usuario_Pedido& userped, Pedido_Articulo& pedart, Usuario& user, const Tarjeta& tar, const Fecha& fech = Fecha {});
 
         //Metodos observadores
         int numero() const noexcept;
-        Tarjeta* tarjeta() const noexcept;
+        const Tarjeta* tarjeta() const noexcept;
         const Fecha& fecha() const noexcept;
         double total() const noexcept;
         static int n_total_pedidos() noexcept;
@@ -51,7 +50,7 @@ class Pedido{
 
         class SinStock{
             public:
-                SinStock(const Articulo* a);
+                SinStock(const Articulo& a);
                 const Articulo& articulo() const;
             private:
                 const Articulo* art_;
@@ -60,7 +59,7 @@ class Pedido{
     private:
         //Variables
         int numero_;
-        Tarjeta* tarjeta_;
+        const Tarjeta* tarjeta_;
         Fecha fecha_;
         double total_;
         static int n_pedidos;
@@ -71,7 +70,7 @@ std::ostream& operator <<(std::ostream& os, const Pedido& ped);
 //Metodos inline
 //Metodos observadores
 inline int Pedido::numero() const noexcept{return numero_;}
-inline Tarjeta* Pedido::tarjeta() const noexcept{return tarjeta_;}
+inline const Tarjeta* Pedido::tarjeta() const noexcept{return tarjeta_;}
 inline const Fecha& Pedido::fecha() const noexcept{return fecha_;}
 inline double Pedido::total() const noexcept{return total_;}
 inline int Pedido::n_total_pedidos() noexcept{return n_pedidos;}
@@ -83,7 +82,7 @@ inline const Usuario& Pedido::Vacio::usuario() const{return *user_;}
 inline Pedido::Impostor::Impostor(const Usuario& us): user_{&us}{}
 inline const Usuario& Pedido::Impostor::usuario() const{return *user_;}
 //Clase SinStock
-inline Pedido::SinStock::SinStock(const Articulo* a): art_{a}{}
+inline Pedido::SinStock::SinStock(const Articulo& a): art_{&a}{}
 inline const Articulo& Pedido::SinStock::articulo() const{return *art_;}
 
 #endif // _PEDIDO_HPP_

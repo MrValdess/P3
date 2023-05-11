@@ -30,23 +30,31 @@ struct EsBlanco{
 //Constructor por defecto
 Numero::Numero(const Cadena& num){
     //Le quitamos los espacios
-    Cadena aux;
-    auto it = std::remove_if(aux.begin(), aux.end(), EsBlanco());
+    Cadena aux = num;
+    auto it1 = std::remove_if(aux.begin(), aux.end(), EsBlanco());
+    if(it1 != aux.end()){
+        int cont = 0;
+        for(auto j = aux.begin(); j != it1; j++, cont++);
+        aux = aux.substr(0,cont);
+    }
     //Comprobamos que todo sea digito
     auto it2 = std::find_if(aux.begin(), aux.end(), std::not_fn(EsDigito()));
     if(it2 == aux.end()){
         //Verificamos que sea correcta
         if(aux.length() < 13 || aux.length() > 19){ //Si la cadena esta fuera de la longitud valida lanzamos un error
-            throw Numero::Incorrecto(LONGITUD);
+            Numero::Incorrecto numInc(Razon::LONGITUD);
+            throw numInc;;
         }
-        else if(!luhn(aux)){    //Si la cadena no cumple el algoritmo de luhn, da error
-            throw Numero::Incorrecto(NO_VALIDO);
+        if(!luhn(aux)){    //Si la cadena no cumple el algoritmo de luhn, da error
+            Numero::Incorrecto noVal(Razon::NO_VALIDO);
+            throw noVal;
         }
         //Si cumple ambos criterios, copiamos la cadena sin espacios ni caracteres invalidos
         numero_= aux;
     }
     else{
-        throw Numero::Incorrecto(DIGITOS);
+        Numero::Incorrecto digits(Razon::DIGITOS);
+        throw digits;
     }
 }
 
